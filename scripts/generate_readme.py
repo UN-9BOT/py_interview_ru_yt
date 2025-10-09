@@ -60,6 +60,19 @@ def group_by_channel(entries: Iterable[Entry]) -> dict[str, list[Entry]]:
     return dict(sorted(grouped.items(), key=lambda item: item[0].lower()))
 
 
+def anchor_id(name: str) -> str:
+    slug = []
+    for char in name.strip().lower():
+        if char.isspace() or char in {"-", "_"}:
+            slug.append("-")
+        elif char.isalnum():
+            slug.append(char)
+    result = "".join(slug).strip("-")
+    while "--" in result:
+        result = result.replace("--", "-")
+    return result or "section"
+
+
 def render_markdown(entries: list[Entry]) -> str:
     total = len(entries)
     header = [
@@ -74,8 +87,17 @@ def render_markdown(entries: list[Entry]) -> str:
         return "\n".join(header)
 
     grouped = group_by_channel(entries)
+    toc_block: list[str] = [
+        "## Каналы",
+        "",
+    ]
+    for channel, items in grouped.items():
+        toc_block.append(f"- [{channel} ({len(items)})](#{anchor_id(channel)})")
+    toc_block.append("")
+
     blocks: list[str] = [
         *header,
+        *toc_block,
         "## Contributing",
         "",
         "- Открыт для PR =)",

@@ -2,6 +2,28 @@
 
 - Всего интервью: **86**
 
+## Каналы
+
+- [Artem Levkivskyi (2)](#artem-levkivskyi)
+- [BELOV (13)](#belov)
+- [boreesych (1)](#boreesych)
+- [Habr (2)](#habr)
+- [import this. how to code on python (1)](#import-this-how-to-code-on-python)
+- [luchanos (3)](#luchanos)
+- [MoscowPython (4)](#moscowpython)
+- [Python Mentor (1)](#python-mentor)
+- [Python собеседования (12)](#python-собеседования)
+- [Rineisky Dev (2)](#rineisky-dev)
+- [Solvery (1)](#solvery)
+- [TeachMeSkills Школа программирования (1)](#teachmeskills-школа-программирования)
+- [Timur Shemsedinov (1)](#timur-shemsedinov)
+- [Vadim Novoselov (1)](#vadim-novoselov)
+- [Андрей += Пронин (34)](#андрей-пронин)
+- [Артём Шумейко (1)](#артём-шумейко)
+- [Макс из codereview (1)](#макс-из-codereview)
+- [Хекслет - школа программирования (4)](#хекслет-школа-программирования)
+- [ШОРТКАТ — менторская программа (1)](#шорткат-менторская-программа)
+
 ## Contributing
 
 - Открыт для PR =)
