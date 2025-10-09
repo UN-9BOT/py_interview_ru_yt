@@ -4,6 +4,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+from urllib.parse import parse_qs, urlparse
 
 
 INPUT_PATH = Path("test2.json")
@@ -19,6 +20,15 @@ class Entry:
 
 def sanitize_title(value: str) -> str:
     return " — ".join(part.strip() for part in value.split("|") if part.strip()) or value.replace("|", " ")
+
+
+def link_label(url: str) -> str:
+    parsed = urlparse(url)
+    qs = parse_qs(parsed.query)
+    if qs.get("v"):
+        return qs["v"][0]
+    tail = parsed.path.rstrip("/").split("/")[-1]
+    return tail or parsed.netloc
 
 
 def load_entries(path: Path) -> list[Entry]:
@@ -68,7 +78,8 @@ def render_markdown(entries: list[Entry]) -> str:
         blocks.append("| # | Видео | Ссылка |")
         blocks.append("| - | ----- | ------ |")
         for idx, item in enumerate(items, start=1):
-            blocks.append(f"| {idx} | {item.title} | [Смотреть]({item.link}) |")
+            label = link_label(item.link)
+            blocks.append(f"| {idx} | {item.title} | [{label}]({item.link}) |")
         blocks.append("")
     return "\n".join(blocks)
 
