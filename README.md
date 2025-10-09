@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **83**
+- Всего интервью: **84**
 
 ## Contributing
 
@@ -97,6 +97,7 @@
 | 9 | Собеседование на позицию Senior Python Developer 350т.р. #10 | [d6xo7nsvQJI](https://www.youtube.com/watch?v=d6xo7nsvQJI) |
 | 10 | Собеседование на позицию Senior Python Developer 4000$ #9 | [BE3SNu7WESI](https://www.youtube.com/watch?v=BE3SNu7WESI) |
 | 11 | Собеседование на позицию Senior Python Developer 4000-5000$ #11 | [JjJdOh9Ornk](https://www.youtube.com/watch?v=JjJdOh9Ornk) |
+| 12 | Собеседование на позицию Senior Python Developer 5000$ #12 | [7JCf77NZRm0](https://www.youtube.com/watch?v=7JCf77NZRm0) |
 
 ## Rineisky Dev
 
