@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **86**
+- Всего интервью: **87**
 - Последнее добавление: **2025-10-09**
 
 ## Contributing
@@ -24,10 +24,10 @@
 | # | Канал | Видео | Ссылка | Контрибьютор |
 | - | ------ | ----- | ------ | ------------- |
 | 1 | ШОРТКАТ — менторская программа | Пример успешного собеседование на Python Middle разработчика — WebSockets, Docker | [K59vNnxCre4](https://www.youtube.com/watch?v=K59vNnxCre4) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 2 | Хекслет - школа программирования | Собеседование python-разработчика для Авито | [REN0G58nJAs](https://www.youtube.com/watch?v=REN0G58nJAs) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 3 | Хекслет - школа программирования | Публичное собеседование: Python-программист [Хекслет] | [I-KhxNwc1Ns](https://www.youtube.com/watch?v=I-KhxNwc1Ns) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 4 | Хекслет - школа программирования | Публичное собеседование: Junior Python-программист | [MgFH0IkQNMQ](https://www.youtube.com/watch?v=MgFH0IkQNMQ) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 5 | Хекслет - школа программирования | 15 теоретических вопросов для начинающего Python-программиста на собеседовании (и 1 задача) | [B5Xbyj4h1JI](https://www.youtube.com/watch?v=B5Xbyj4h1JI) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 2 | Хекслет - школа программирования | Собеседование для Python Junior разработчика: реальное мок-интервью с теорией и лайвкодингом | [JBKu84gQ16o](https://www.youtube.com/watch?v=JBKu84gQ16o) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 3 | Хекслет - школа программирования | Собеседование python-разработчика для Авито | [REN0G58nJAs](https://www.youtube.com/watch?v=REN0G58nJAs) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 4 | Хекслет - школа программирования | Публичное собеседование: Python-программист [Хекслет] | [I-KhxNwc1Ns](https://www.youtube.com/watch?v=I-KhxNwc1Ns) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 5 | Хекслет - школа программирования | Публичное собеседование: Junior Python-программист | [MgFH0IkQNMQ](https://www.youtube.com/watch?v=MgFH0IkQNMQ) | [UN-9BOT](https://github.com/UN-9BOT) |
 
 ## Каналы
 
@@ -48,7 +48,7 @@
 - [Андрей += Пронин (34)](#андрей-пронин)
 - [Артём Шумейко (1)](#артём-шумейко)
 - [Макс из codereview (1)](#макс-из-codereview)
-- [Хекслет - школа программирования (4)](#хекслет-школа-программирования)
+- [Хекслет - школа программирования (5)](#хекслет-школа-программирования)
 - [ШОРТКАТ — менторская программа (1)](#шорткат-менторская-программа)
 
 ## Artem Levkivskyi
@@ -225,6 +225,7 @@
 | 2 | Публичное собеседование: Junior Python-программист | [MgFH0IkQNMQ](https://www.youtube.com/watch?v=MgFH0IkQNMQ) | [UN-9BOT](https://github.com/UN-9BOT) |
 | 3 | Публичное собеседование: Python-программист [Хекслет] | [I-KhxNwc1Ns](https://www.youtube.com/watch?v=I-KhxNwc1Ns) | [UN-9BOT](https://github.com/UN-9BOT) |
 | 4 | Собеседование python-разработчика для Авито | [REN0G58nJAs](https://www.youtube.com/watch?v=REN0G58nJAs) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 5 | Собеседование для Python Junior разработчика: реальное мок-интервью с теорией и лайвкодингом | [JBKu84gQ16o](https://www.youtube.com/watch?v=JBKu84gQ16o) | [UN-9BOT](https://github.com/UN-9BOT) |
 
 ## ШОРТКАТ — менторская программа
 
