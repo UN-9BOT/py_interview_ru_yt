@@ -39,7 +39,8 @@ def main() -> None:
         return
 
     if event_name == "issues":
-        body = event.get("issue", {}).get("body") or ""
+        issue = event.get("issue", {}) or {}
+        body = issue.get("body") or ""
         if normalize_first_line(body) == "/add-video":
             write_output(True, True, body)
             return
@@ -63,7 +64,12 @@ def main() -> None:
             write_output(False, False)
             return
 
-        write_output(True, True, body)
+        issue_number = issue.get("number")
+        command_json = json.dumps(
+            {"number": issue_number, "payload": body},
+            ensure_ascii=False,
+        )
+        write_output(True, True, command_json)
         return
 
     write_output(False, False)
