@@ -1,0 +1,101 @@
+name: Add Video via Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      link:
+        description: "YouTube ссылка (https://www.youtube.com/... или https://youtu.be/...)"
+        required: true
+      title:
+        description: "Название видео"
+        required: true
+      channel:
+        description: "Название канала"
+        required: true
+
+jobs:
+  add-video:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Append video entry
+        env:
+          LINK: ${{ inputs.link }}
+          TITLE: ${{ inputs.title }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          python - <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+from urllib.parse import parse_qs, urlparse
+
+LINK = os.environ["LINK"].strip()
+TITLE = os.environ["TITLE"].strip()
+CHANNEL = os.environ["CHANNEL"].strip()
+
+if not LINK or not TITLE or not CHANNEL:
+    sys.exit("Все поля (link, title, channel) обязательны.")
+
+lower = LINK.lower()
+if "youtube.com" not in lower and "youtu.be" not in lower:
+    sys.exit("Ожидалась YouTube ссылка.")
+
+def extract_video_id(url: str) -> str:
+    parsed = urlparse(url)
+    if parsed.hostname and "youtu.be" in parsed.hostname:
+        return parsed.path.strip("/")
+    if parsed.hostname and "youtube.com" in parsed.hostname:
+        qs = parse_qs(parsed.query)
+        if "v" in qs:
+            return qs["v"][0]
+        segments = [part for part in parsed.path.split("/") if part]
+        if len(segments) >= 2 and segments[0] == "shorts":
+            return segments[1]
+    return url
+
+path = Path("list.json")
+if path.exists():
+    data = json.loads(path.read_text(encoding="utf-8"))
+else:
+    data = {"results": []}
+
+entries = data.get("results", [])
+video_id = extract_video_id(LINK)
+
+for item in entries:
+    if extract_video_id(item.get("link", "")) == video_id:
+        sys.exit(f"Видео с ID {video_id} уже есть в list.json.")
+
+entry = {"title": TITLE, "channel_name": CHANNEL, "link": LINK}
+entries.append(entry)
+data["results"] = entries
+path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+print(f"Добавлено: {CHANNEL} — {TITLE} ({video_id})")
+PY
+
+      - name: Generate README
+        run: make readme
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "Add video: ${{ inputs.title }}"
+          branch: "bot/add-video-${{ github.run_id }}"
+          title: "Add video: ${{ inputs.title }}"
+          body: |
+            Добавлено новое видео:
+            - Канал: `${{ inputs.channel }}`
+            - Название: `${{ inputs.title }}`
+            - Ссылка: `${{ inputs.link }}`
+          add-paths: |
+            list.json
+            README.md

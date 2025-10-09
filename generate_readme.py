@@ -81,6 +81,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "- Открыт для PR =)",
         "- README.md руками не править!",
         "- Добавляйте новые интервью через `make meta \"https://youtu...\"` или интерактивно через `make add`.",
+        "- Можно запустить GitHub Actions workflow `Add Video via Dispatch` (inputs: link/title/channel) — он создаст PR автоматически.",
         "- При ручных правках дописывайте записи в конец `list.json` (ключ `results`).",
         "- Используйте только YouTube-ссылки и интервью по Python.",
         "- После правок выполните `make readme`, чтобы обновить `README.md`.",
