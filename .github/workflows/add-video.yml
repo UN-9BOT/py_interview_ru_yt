@@ -24,6 +24,11 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Determine trigger context
         id: guard
         run: python determine_trigger.py
@@ -35,11 +40,6 @@ jobs:
           PAYLOAD: ${{ steps.guard.outputs.raw_command }}
         run: |
           python parse_issue_command.py
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Append video entry
         if: steps.guard.outputs.should_run == 'true'
