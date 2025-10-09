@@ -7,7 +7,6 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
-DEFAULT_SUBMITTER = "UN-9BOT"
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,20 +40,28 @@ def extract_video_id(link: str) -> str:
     return link
 
 
+def normalize_submitter(value: str) -> str:
+    return value.strip().rstrip("/").split("/")[-1].lstrip("@")
+
+
 def load_entries() -> list[dict]:
-    if DATA_PATH.exists():
-        try:
-            data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as exc:
-            sys.exit(f"Не удалось распарсить {DATA_PATH}: {exc}")
-        results = data.get("results", [])
-        for item in results:
-            if not item.get("submitted_by"):
-                item["submitted_by"] = DEFAULT_SUBMITTER
-            else:
-                item["submitted_by"] = item["submitted_by"].strip().rstrip("/").split("/")[-1]
-        return results
-    return []
+    if not DATA_PATH.exists():
+        return []
+    try:
+        data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        sys.exit(f"Не удалось распарсить {DATA_PATH}: {exc}")
+
+    results = data.get("results", [])
+    for idx, item in enumerate(results, start=1):
+        raw_submitter = (item.get("submitted_by") or "").strip()
+        if not raw_submitter:
+            sys.exit(
+                f"У записи #{idx} ({item.get('title', '<без названия>')}) отсутствует поле submitted_by. "
+                "Добавьте логин контрибьютора в list.json."
+            )
+        item["submitted_by"] = normalize_submitter(raw_submitter)
+    return results
 
 
 def save_entries(entries: list[dict]) -> None:
@@ -70,20 +77,18 @@ def main() -> None:
     link = args.link.strip()
     title = args.title.strip()
     channel = args.channel.strip()
+    submitted_raw = (args.submitted_by or "").strip()
 
     if not link or not title or not channel:
         sys.exit("Все поля (link, title, channel) обязательны.")
+    if not submitted_raw:
+        sys.exit("Параметр --submitted-by обязателен.")
 
     ensure_youtube(link)
     new_id = extract_video_id(link)
 
     entries = load_entries()
-    for item in entries:
-        if not item.get("submitted_by"):
-            item["submitted_by"] = DEFAULT_SUBMITTER
-
-    submitter = (args.submitted_by or DEFAULT_SUBMITTER).strip() or DEFAULT_SUBMITTER
-    submitter = submitter.lstrip("@").split("/")[-1]
+    submitter = normalize_submitter(submitted_raw)
     for item in entries:
         if extract_video_id(item.get("link", "")) == new_id:
             sys.exit(f"Видео с ID {new_id} уже есть в list.json.")

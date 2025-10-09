@@ -5,9 +5,6 @@ import shlex
 import sys
 from typing import Dict, Optional
 
-DEFAULT_SUBMITTER = "UN-9BOT"
-
-
 def main() -> None:
     raw = os.environ.get("PAYLOAD", "")
     if not raw.strip():
@@ -24,7 +21,7 @@ def main() -> None:
     else:
         payload = data.get("payload", "")
         issue_number = data.get("number")
-        author = (data.get("author") or "").strip() or ""
+        author = (data.get("author") or "").strip()
 
     payload = payload.strip()
     if payload.startswith("/add-video"):
@@ -54,8 +51,13 @@ def main() -> None:
             fh.write(f"ISSUE_NUMBER={issue_number}\n")
         else:
             fh.write("ISSUE_NUMBER=\n")
-        raw_submitter = author or DEFAULT_SUBMITTER
-        submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@") or DEFAULT_SUBMITTER
+        if not author:
+            print("Не удалось определить автора issue/comment для заполнения submitted_by.", file=sys.stderr)
+            sys.exit(1)
+        submitter = author.rstrip("/").split("/")[-1].lstrip("@")
+        if not submitter:
+            print("Переданный логин автора пустой после нормализации.", file=sys.stderr)
+            sys.exit(1)
         fh.write(f"SUBMITTER={submitter}\n")
 
 

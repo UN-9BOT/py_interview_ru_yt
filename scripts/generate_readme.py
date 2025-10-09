@@ -10,7 +10,6 @@ from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
 OUTPUT_PATH = Path("README.md")
-DEFAULT_SUBMITTER = "UN-9BOT"
 
 
 @dataclass
@@ -45,11 +44,12 @@ def load_entries() -> list[Entry]:
         title = sanitize_title(raw_title.strip())
         channel = item.get("channel_name", "").strip()
         link = item.get("link", "").strip()
-        raw_submitter = item.get("submitted_by", "").strip()
-        if raw_submitter:
-            submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@") or DEFAULT_SUBMITTER
-        else:
-            submitter = DEFAULT_SUBMITTER
+        raw_submitter = (item.get("submitted_by") or "").strip()
+        if not raw_submitter:
+            raise ValueError(f"Для ссылки {link} не указан submitted_by в list.json.")
+        submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@")
+        if not submitter:
+            raise ValueError(f"Для ссылки {link} указано пустое submitted_by в list.json.")
         if not (title and channel and link):
             continue
         if link in seen_links:
@@ -104,6 +104,26 @@ def render_markdown(entries: list[Entry]) -> str:
         toc_block.append(f"- [{channel} ({len(items)})](#{anchor_id(channel)})")
     toc_block.append("")
 
+    latest_section: list[str] = []
+    latest = entries[-5:]
+    if latest:
+        latest_section.extend(
+            [
+                "## Последние добавления",
+                "",
+                "| # | Канал | Видео | Ссылка | Контрибьютор |",
+                "| - | ------ | ----- | ------ | ------------- |",
+            ]
+        )
+        for idx, item in enumerate(reversed(latest), start=1):
+            label = link_label(item.link)
+            contributor_link = f"https://github.com/{item.submitted_by}"
+            latest_section.append(
+                f"| {idx} | {item.channel} | {item.title} | [{label}]({item.link}) | "
+                f"[{item.submitted_by}]({contributor_link}) |"
+            )
+        latest_section.append("")
+
     blocks: list[str] = [
         *header,
         "## Contributing",
@@ -122,6 +142,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "  GitHub Actions создаст PR автоматически. Других способов добавления нет.",
         "- Созданный PR будет ссылаться на issue.",
         "",
+        *latest_section,
         *toc_block,
     ]
     for channel, items in grouped.items():

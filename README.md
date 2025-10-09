@@ -19,6 +19,16 @@
   GitHub Actions создаст PR автоматически. Других способов добавления нет.
 - Созданный PR будет ссылаться на issue.
 
+## Последние добавления
+
+| # | Канал | Видео | Ссылка | Контрибьютор |
+| - | ------ | ----- | ------ | ------------- |
+| 1 | Артём Шумейко | Реальное ЛАЙВКОДИНГ собеседование JUNIOR Python разработчик | [soVEbzAnKx8](https://www.youtube.com/watch?v=soVEbzAnKx8) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 2 | MoscowPython | Моковое собеседование на Senior Python-разработчика \| Solvery & Moscow Python | [YJiQ-TBb9po](https://www.youtube.com/watch?v=YJiQ-TBb9po) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 3 | Python собеседования | Собеседование на позицию Senior Python Developer 5000$ #12 | [7JCf77NZRm0](https://www.youtube.com/watch?v=7JCf77NZRm0) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 4 | Python Mentor | 🚨 Пытаюсь пройти РЕАЛЬНЫЙ собес на Lead Python Engineer / Теория + рефакторинг кода / Опять фиаско? | [LjA10h-tfkQ](https://www.youtube.com/watch?v=LjA10h-tfkQ) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 5 | boreesych | Публичное тестовое собеседование Георгия на роль Junior Python разработчика | [jseRiu6RTAM](https://www.youtube.com/watch?v=jseRiu6RTAM) | [UN-9BOT](https://github.com/UN-9BOT) |
+
 ## Каналы
 
 - [Artem Levkivskyi (2)](#artem-levkivskyi)
@@ -221,4 +231,3 @@
 | # | Видео | Ссылка | Контрибьютор |
 | - | ----- | ------ | ------------- |
 | 1 | Пример успешного собеседование на Python Middle разработчика — WebSockets, Docker | [K59vNnxCre4](https://www.youtube.com/watch?v=K59vNnxCre4) | [UN-9BOT](https://github.com/UN-9BOT) |
-
