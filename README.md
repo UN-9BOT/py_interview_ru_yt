@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **85**
+- Всего интервью: **86**
 
 ## Contributing
 
@@ -172,6 +172,12 @@
 | 33 | Турукин Вячеслав. Собеседование junior python разработчик | [o9EWhFiyE8E](https://www.youtube.com/watch?v=o9EWhFiyE8E) |
 | 34 | Усенко Михаил — Собеседование python разработчик | [1Dbj41UiQFM](https://www.youtube.com/watch?v=1Dbj41UiQFM) |
 
+## Артём Шумейко
+
+| # | Видео | Ссылка |
+| - | ----- | ------ |
+| 1 | Реальное ЛАЙВКОДИНГ собеседование JUNIOR Python разработчик | [soVEbzAnKx8](https://www.youtube.com/watch?v=soVEbzAnKx8) |
+
 ## Макс из codereview
 
 | # | Видео | Ссылка |
@@ -192,3 +198,4 @@
 | # | Видео | Ссылка |
 | - | ----- | ------ |
 | 1 | Пример успешного собеседование на Python Middle разработчика — WebSockets, Docker | [K59vNnxCre4](https://www.youtube.com/watch?v=K59vNnxCre4) |
+
