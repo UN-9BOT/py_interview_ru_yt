@@ -6,7 +6,15 @@
 
 - Открыт для PR =)
 - Не редактируйте `list.json` и `README.md` вручную.
-- Добавляйте новые интервью только через GitHub Actions workflow `Add Video via Dispatch` (inputs: link/title/channel) — он создаёт PR автоматически.
+- Создайте issue и оставьте комментарий:
+  ```
+  /add-video
+  link="https://www.youtube.com/watch?v=..."
+  title="Название видео"
+  channel="Название канала"
+  ```
+  GitHub Actions создаст PR автоматически.
+- Альтернативно можно запустить workflow `Add Video via Dispatch` и заполнить поля вручную.
 
 ## Artem Levkivskyi
 

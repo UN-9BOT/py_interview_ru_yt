@@ -1,0 +1,3 @@
+LINK=https://youtu.be/abc
+TITLE=Test
+CHANNEL=Some Channel
