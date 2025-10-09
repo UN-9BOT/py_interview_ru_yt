@@ -80,7 +80,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "",
         "- Открыт для PR =)",
         "- Не редактируйте `list.json` и `README.md` вручную.",
-        "- Создайте issue и оставьте комментарий:",
+        "- Создайте issue с описанием:",
         "  ```",
         "  /add-video",
         "  link=\"https://www.youtube.com/watch?v=...\"",
@@ -88,7 +88,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "  channel=\"Название канала\"",
         "  ```",
         "  GitHub Actions создаст PR автоматически.",
-        "- Альтернативно можно запустить workflow `Add Video via Dispatch` и заполнить поля вручную.",
+        "- При желании можно запустить workflow `Add Video via Dispatch` и заполнить поля вручную.",
         "",
     ]
     for channel, items in grouped.items():
