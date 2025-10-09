@@ -6,6 +6,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -42,6 +43,20 @@ def parse_args() -> argparse.Namespace:
 def is_youtube_link(link: str) -> bool:
     lowered = link.lower()
     return "youtube.com" in lowered or "youtu.be" in lowered
+
+
+def extract_video_id(link: str) -> str:
+    parsed = urlparse(link)
+    if parsed.hostname and "youtu.be" in parsed.hostname:
+        return parsed.path.strip("/")
+    if parsed.hostname and "youtube.com" in parsed.hostname:
+        qs = parse_qs(parsed.query)
+        if "v" in qs:
+            return qs["v"][0]
+        path_parts = [part for part in parsed.path.split("/") if part]
+        if len(path_parts) >= 2 and path_parts[0] == "shorts":
+            return path_parts[1]
+    return link
 
 
 def load_results() -> list[dict]:
@@ -118,6 +133,12 @@ def main() -> None:
         sys.exit(1)
 
     results = load_results()
+    link_id = extract_video_id(link)
+    for item in results:
+        existing_id = extract_video_id(item.get("link", ""))
+        if existing_id == link_id:
+            logger.info("Запись с таким видео (%s) уже есть в списке.", link_id)
+            sys.exit(0)
     if any(item.get("link") == link for item in results):
         logger.info("Эта ссылка уже есть в списке. Повторений не требуется.")
         sys.exit(0)

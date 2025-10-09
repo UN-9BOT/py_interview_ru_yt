@@ -2,6 +2,7 @@
 import json
 import sys
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
 
@@ -42,6 +43,20 @@ def ask_link() -> str:
         print("Нужна ссылка на YouTube. Попробуйте снова.")
 
 
+def extract_video_id(link: str) -> str:
+    parsed = urlparse(link)
+    if parsed.hostname and "youtu.be" in parsed.hostname:
+        return parsed.path.strip("/")
+    if parsed.hostname and "youtube.com" in parsed.hostname:
+        qs = parse_qs(parsed.query)
+        if "v" in qs:
+            return qs["v"][0]
+        parts = [part for part in parsed.path.split("/") if part]
+        if len(parts) >= 2 and parts[0] == "shorts":
+            return parts[1]
+    return link
+
+
 def confirm(entry: dict) -> bool:
     print(BORDER)
     print("Проверьте введённые данные:")
@@ -73,6 +88,12 @@ def main() -> None:
         title = prompt("Название видео")
         channel = prompt("Название канала")
         entry = {"title": title, "channel_name": channel, "link": link}
+
+        new_id = extract_video_id(link)
+        for item in results:
+            if extract_video_id(item.get("link", "")) == new_id:
+                print(f"Такая ссылка уже есть в списке (ID: {new_id}). Добавление отменено.")
+                return
 
         if any(item.get("link") == link for item in results):
             print("Такая ссылка уже есть в списке. Добавление отменено.")
