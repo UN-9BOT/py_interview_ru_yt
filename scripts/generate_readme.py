@@ -106,7 +106,6 @@ def render_markdown(entries: list[Entry]) -> str:
 
     blocks: list[str] = [
         *header,
-        *toc_block,
         "## Contributing",
         "",
         "- Открыт для PR =)",
@@ -123,6 +122,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "  GitHub Actions создаст PR автоматически. Других способов добавления нет.",
         "- Созданный PR будет ссылаться на issue.",
         "",
+        *toc_block,
     ]
     for channel, items in grouped.items():
         blocks.append(f"## {channel}")
