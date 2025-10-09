@@ -20,7 +20,7 @@ jobs:
 
       - name: Determine trigger context
         id: guard
-        run: python determine_trigger.py
+        run: python scripts/determine_trigger.py
 
       - name: Parse issue command
         if: steps.guard.outputs.issue_mode == 'true'
@@ -28,7 +28,7 @@ jobs:
         env:
           PAYLOAD: ${{ steps.guard.outputs.raw_command }}
         run: |
-          python parse_issue_command.py
+          python scripts/parse_issue_command.py
 
       - name: Append video entry
         if: steps.guard.outputs.should_run == 'true'
@@ -37,14 +37,14 @@ jobs:
           TITLE: ${{ steps.parse.outputs.TITLE }}
           CHANNEL: ${{ steps.parse.outputs.CHANNEL }}
         run: |
-          python append_video_entry.py \
+          python scripts/append_video_entry.py \
             --link "$LINK" \
             --title "$TITLE" \
             --channel "$CHANNEL"
 
       - name: Generate README
         if: steps.guard.outputs.should_run == 'true'
-        run: python generate_readme.py
+        run: python scripts/generate_readme.py
 
       - name: Create Pull Request
         if: steps.guard.outputs.should_run == 'true'
