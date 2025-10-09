@@ -44,7 +44,7 @@ jobs:
 
       - name: Generate README
         if: steps.guard.outputs.should_run == 'true'
-        run: make readme
+        run: python generate_readme.py
 
       - name: Create Pull Request
         if: steps.guard.outputs.should_run == 'true'
@@ -58,6 +58,7 @@ jobs:
             - Канал: `${{ steps.parse.outputs.CHANNEL }}`
             - Название: `${{ steps.parse.outputs.TITLE }}`
             - Ссылка: `${{ steps.parse.outputs.LINK }}`
+            ${{ steps.parse.outputs.ISSUE_NUMBER && format('Closes #{0}', steps.parse.outputs.ISSUE_NUMBER) }}
           add-paths: |
             list.json
             README.md

@@ -89,6 +89,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "  channel=\"Название канала\"",
         "  ```",
         "  GitHub Actions создаст PR автоматически. Других способов добавления нет.",
+        "- Созданный PR будет ссылаться на issue.",
         "",
     ]
     for channel, items in grouped.items():
