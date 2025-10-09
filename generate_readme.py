@@ -81,6 +81,17 @@ def render_markdown(entries: list[Entry]) -> str:
             label = link_label(item.link)
             blocks.append(f"| {idx} | {item.title} | [{label}]({item.link}) |")
         blocks.append("")
+    blocks.extend(
+        [
+            "## Как контрибьютить",
+            "",
+            "- Добавляйте новые интервью в конец `test2.json` (ключ `results`).",
+            "- Используйте только YouTube-ссылки и видео по Python.",
+            "- После правок выполните `make readme`, чтобы обновить `README.md`.",
+            "- Открыты для Pull Request: проверьте, что `README.md` и `test2.json` синхронизированы.",
+            "",
+        ]
+    )
     return "\n".join(blocks)
 
 
