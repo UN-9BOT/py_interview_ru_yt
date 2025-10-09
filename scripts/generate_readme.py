@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import json
 from collections import defaultdict
-from dataclasses import dataclass
-from pathlib import Path
 from collections.abc import Iterable
+from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 
@@ -79,6 +80,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "# Подборка Python-собеседований",
         "",
         f"- Всего интервью: **{total}**",
+        f"- Последнее обновление: **{date.today().isoformat()}**",
         "",
     ]
     if total == 0:
