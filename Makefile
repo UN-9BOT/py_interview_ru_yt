@@ -1,6 +1,6 @@
 .PHONY: readme add all clean test
 
-readme: test2.json generate_readme.py
+readme: list.json generate_readme.py
 	python generate_readme.py
 
 add:

@@ -3,14 +3,14 @@ import json
 import sys
 from pathlib import Path
 
-TEST2_PATH = Path("test2.json")
+LIST_PATH = Path("list.json")
 
 BORDER = "=" * 60
 
 
 def load_results(path: Path) -> list[dict]:
     if not path.exists():
-        print("Файл test2.json не найден, создаю новый каркас.")
+        print("Файл list.json не найден, создаю новый каркас.")
         return []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -68,7 +68,7 @@ def main() -> None:
     print(BORDER)
 
     try:
-        results = load_results(TEST2_PATH)
+        results = load_results(LIST_PATH)
         link = ask_link()
         title = prompt("Название видео")
         channel = prompt("Название канала")
@@ -83,8 +83,8 @@ def main() -> None:
             return
 
         results.append(entry)
-        save_results(TEST2_PATH, results)
-        print("Готово! Запись добавлена в конец test2.json.")
+        save_results(LIST_PATH, results)
+        print("Готово! Запись добавлена в конец list.json.")
         print("README.md будет обновлён автоматически после завершения make.")
     except KeyboardInterrupt:
         print("\nОтмена пользователем.")

@@ -3,11 +3,11 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from collections.abc import Iterable
 from urllib.parse import parse_qs, urlparse
 
 
-INPUT_PATH = Path("test2.json")
+INPUT_PATH = Path("list.json")
 OUTPUT_PATH = Path("README.md")
 
 
@@ -60,18 +60,26 @@ def render_markdown(entries: list[Entry]) -> str:
     header = [
         "# Подборка Python-собеседований",
         "",
-        "_Файл README.md генерируется автоматически скриптом `generate_readme.py` на основе `test2.json`._",
-        "",
         f"- Всего интервью: **{total}**",
         "",
     ]
     if total == 0:
-        header.append("Данные отсутствуют. Запустите скрипт `get_name.py` для сбора информации.")
+        header.append("Данные отсутствуют. Запустите скрипт `get_meta_from_yt_link.py` для сбора информации.")
         header.append("")
         return "\n".join(header)
 
     grouped = group_by_channel(entries)
-    blocks: list[str] = header
+    blocks: list[str] = [
+        *header,
+        "## Contributing",
+        "",
+        "- Открыт для PR =)",
+        "- README.md руками не править!",
+        "- Добавляйте новые интервью через `make readme` или руками в конец `list.json` (ключ `results`).",
+        "- Используйте только YT-ссылки и видео по Python.",
+        "- После правок выполните `make readme`, чтобы обновить `README.md`.",
+        "",
+    ]
     for channel, items in grouped.items():
         blocks.append(f"## {channel}")
         blocks.append("")
@@ -81,17 +89,6 @@ def render_markdown(entries: list[Entry]) -> str:
             label = link_label(item.link)
             blocks.append(f"| {idx} | {item.title} | [{label}]({item.link}) |")
         blocks.append("")
-    blocks.extend(
-        [
-            "## Как контрибьютить",
-            "",
-            "- Добавляйте новые интервью в конец `test2.json` (ключ `results`).",
-            "- Используйте только YouTube-ссылки и видео по Python.",
-            "- После правок выполните `make readme`, чтобы обновить `README.md`.",
-            "- Открыты для Pull Request: проверьте, что `README.md` и `test2.json` синхронизированы.",
-            "",
-        ]
-    )
     return "\n".join(blocks)
 
 
