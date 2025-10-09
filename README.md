@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **87**
+- Всего интервью: **88**
 - Последнее добавление: **2025-10-09**
 
 ## Contributing
@@ -45,6 +45,7 @@
 - [TeachMeSkills Школа программирования (1)](#teachmeskills-школа-программирования)
 - [Timur Shemsedinov (1)](#timur-shemsedinov)
 - [Vadim Novoselov (1)](#vadim-novoselov)
+- [{ между скобок } (1)](#между-скобок)
 - [Андрей += Пронин (34)](#андрей-пронин)
 - [Артём Шумейко (1)](#артём-шумейко)
 - [Макс из codereview (1)](#макс-из-codereview)
@@ -165,6 +166,12 @@
 | # | Видео | Ссылка | Контрибьютор |
 | - | ----- | ------ | ------------- |
 | 1 | #33 Собеседование Python 2025 в BIG TECH компанию — Разбор вопросов | [QQD-l8Leqog](https://www.youtube.com/watch?v=QQD-l8Leqog) | [UN-9BOT](https://github.com/UN-9BOT) |
+
+## { между скобок }
+
+| # | Видео | Ссылка | Контрибьютор |
+| - | ----- | ------ | ------------- |
+| 1 | Виталий Лихачев, Павел Мальцев: Публичное собеседование Senior Python Engineer | [NhVnJAmeHf0](https://www.youtube.com/watch?v=NhVnJAmeHf0) | [UN-9BOT](https://github.com/UN-9BOT) |
 
 ## Андрей += Пронин
 
