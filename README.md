@@ -12,9 +12,9 @@
 - В описании должно быть:
   ```
   /add-video
-  link="https://www.youtube.com/watch?v=..."
-  title="Название видео"
-  channel="Название канала"
+  LINK = https://www.youtube.com/watch?v=...
+  TITLE = Название видео
+  CHANNEL = Название канала
   ```
   GitHub Actions создаст PR автоматически. Других способов добавления нет.
 - Созданный PR будет ссылаться на issue.

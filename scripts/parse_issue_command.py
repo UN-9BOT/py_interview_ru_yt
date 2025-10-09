@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import json
 import os
-import shlex
 import sys
 from datetime import datetime
 from typing import Dict, Optional
@@ -31,10 +30,17 @@ def main() -> None:
         payload = payload[len("/add-video"):].strip()
 
     parsed: Dict[str, str] = {}
-    for token in shlex.split(payload):
-        if "=" not in token:
+    for raw_line in payload.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
             continue
-        key, value = token.split("=", 1)
+        if "=" not in line:
+            continue
+        key_part, value_part = line.split("=", 1)
+        key = key_part.strip().lower()
+        value = value_part.strip()
+        if value.startswith(("\"", "'")) and value.endswith(("\"", "'")) and len(value) >= 2:
+            value = value[1:-1].strip()
         parsed[key] = value
 
     required = ["link", "title", "channel"]
@@ -42,7 +48,7 @@ def main() -> None:
     if missing:
         print(
             "Missing fields: " + ", ".join(missing)
-            + '. Expected /add-video link="..." title="..." channel="..."',
+            + '. Expected format:\\n/add-video\\nLINK = ...\\nTITLE = ...\\nCHANNEL = ...',
             file=sys.stderr,
         )
         sys.exit(1)
