@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
 OUTPUT_PATH = Path("README.md")
+DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
 
 
 @dataclass
@@ -17,6 +18,7 @@ class Entry:
     title: str
     channel: str
     link: str
+    submitted_by: str
 
 
 def sanitize_title(value: str) -> str:
@@ -43,11 +45,12 @@ def load_entries() -> list[Entry]:
         title = sanitize_title(raw_title.strip())
         channel = item.get("channel_name", "").strip()
         link = item.get("link", "").strip()
+        submitted_by = item.get("submitted_by", "").strip() or DEFAULT_SUBMITTER
         if not (title and channel and link):
             continue
         if link in seen_links:
             continue
-        entries.append(Entry(title=title, channel=channel, link=link))
+        entries.append(Entry(title=title, channel=channel, link=link, submitted_by=submitted_by))
         seen_links.add(link)
     return entries
 
@@ -89,7 +92,21 @@ def render_markdown(entries: list[Entry]) -> str:
         return "\n".join(header)
 
     grouped = group_by_channel(entries)
+    submitters = dict(
+        sorted(
+            ((entry.link, entry.submitted_by) for entry in entries),
+            key=lambda item: item[0],
+        )
+    )
+    submitters_json = json.dumps({"submitted_by": submitters}, ensure_ascii=False, indent=2)
+
     toc_block: list[str] = [
+        "## Добавившие",
+        "",
+        "```json",
+        *submitters_json.splitlines(),
+        "```",
+        "",
         "## Каналы",
         "",
     ]

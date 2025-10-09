@@ -5,6 +5,8 @@ import shlex
 import sys
 from typing import Dict, Optional
 
+DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
+
 
 def main() -> None:
     raw = os.environ.get("PAYLOAD", "")
@@ -14,6 +16,7 @@ def main() -> None:
 
     issue_number: Optional[int] = None
     payload = raw
+    author = ""
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
@@ -21,6 +24,7 @@ def main() -> None:
     else:
         payload = data.get("payload", "")
         issue_number = data.get("number")
+        author = (data.get("author") or "").strip() or ""
 
     payload = payload.strip()
     if payload.startswith("/add-video"):
@@ -50,6 +54,8 @@ def main() -> None:
             fh.write(f"ISSUE_NUMBER={issue_number}\n")
         else:
             fh.write("ISSUE_NUMBER=\n")
+        submitter = author or DEFAULT_SUBMITTER
+        fh.write(f"SUBMITTER={submitter}\n")
 
 
 if __name__ == "__main__":

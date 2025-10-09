@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
+DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
 
 
 def parse_args() -> argparse.Namespace:
@@ -16,6 +17,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--link", required=True, help="YouTube ссылка")
     parser.add_argument("--title", required=True, help="Название видео")
     parser.add_argument("--channel", required=True, help="Название канала")
+    parser.add_argument("--submitted-by", dest="submitted_by", help="URL профиля добавившего пользователя")
     return parser.parse_args()
 
 
@@ -71,10 +73,22 @@ def main() -> None:
 
     entries = load_entries()
     for item in entries:
+        if not item.get("submitted_by"):
+            item["submitted_by"] = DEFAULT_SUBMITTER
+
+    submitter = (args.submitted_by or DEFAULT_SUBMITTER).strip() or DEFAULT_SUBMITTER
+    for item in entries:
         if extract_video_id(item.get("link", "")) == new_id:
             sys.exit(f"Видео с ID {new_id} уже есть в list.json.")
 
-    entries.append({"title": title, "channel_name": channel, "link": link})
+    entries.append(
+        {
+            "title": title,
+            "channel_name": channel,
+            "link": link,
+            "submitted_by": submitter,
+        }
+    )
     save_entries(entries)
     print(f"Добавлено: {channel} — {title} ({new_id})")
 

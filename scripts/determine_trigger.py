@@ -39,8 +39,10 @@ def main() -> None:
         body = issue.get("body") or ""
         if normalize_first_line(body) == "/add-video":
             issue_number = issue.get("number")
+            author_login = (issue.get("user") or {}).get("login")
+            author_url = f"https://github.com/{author_login}/" if author_login else ""
             command_json = json.dumps(
-                {"number": issue_number, "payload": body},
+                {"number": issue_number, "payload": body, "author": author_url},
                 ensure_ascii=False,
             )
             write_output(True, True, command_json)
@@ -66,8 +68,13 @@ def main() -> None:
             return
 
         issue_number = issue.get("number")
+        author_url = ""
+        if author:
+            author_url = f"https://github.com/{author}/"
+        elif issue_author:
+            author_url = f"https://github.com/{issue_author}/"
         command_json = json.dumps(
-            {"number": issue_number, "payload": body},
+            {"number": issue_number, "payload": body, "author": author_url},
             ensure_ascii=False,
         )
         write_output(True, True, command_json)
