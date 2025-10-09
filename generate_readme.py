@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
-from dataclasses import dataclass
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
@@ -17,13 +17,18 @@ class Entry:
     link: str
 
 
+def sanitize_title(value: str) -> str:
+    return " — ".join(part.strip() for part in value.split("|") if part.strip()) or value.replace("|", " ")
+
+
 def load_entries(path: Path) -> list[Entry]:
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8"))
     entries = []
     for item in data.get("results", []):
-        title = item.get("title", "").strip()
+        raw_title = item.get("title", "")
+        title = sanitize_title(raw_title.strip())
         channel = item.get("channel_name", "").strip()
         link = item.get("link", "").strip()
         if title and channel and link:
