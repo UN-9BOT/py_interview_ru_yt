@@ -5,7 +5,7 @@ import shlex
 import sys
 from typing import Dict, Optional
 
-DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
+DEFAULT_SUBMITTER = "UN-9BOT"
 
 
 def main() -> None:
@@ -54,7 +54,8 @@ def main() -> None:
             fh.write(f"ISSUE_NUMBER={issue_number}\n")
         else:
             fh.write("ISSUE_NUMBER=\n")
-        submitter = author or DEFAULT_SUBMITTER
+        raw_submitter = author or DEFAULT_SUBMITTER
+        submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@") or DEFAULT_SUBMITTER
         fh.write(f"SUBMITTER={submitter}\n")
 
 

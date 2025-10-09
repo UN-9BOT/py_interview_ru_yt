@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
-DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
+DEFAULT_SUBMITTER = "UN-9BOT"
 
 
 def parse_args() -> argparse.Namespace:
@@ -17,7 +17,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--link", required=True, help="YouTube ссылка")
     parser.add_argument("--title", required=True, help="Название видео")
     parser.add_argument("--channel", required=True, help="Название канала")
-    parser.add_argument("--submitted-by", dest="submitted_by", help="URL профиля добавившего пользователя")
+    parser.add_argument("--submitted-by", dest="submitted_by", help="Логин добавившего пользователя (GitHub)")
     return parser.parse_args()
 
 
@@ -47,7 +47,13 @@ def load_entries() -> list[dict]:
             data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             sys.exit(f"Не удалось распарсить {DATA_PATH}: {exc}")
-        return data.get("results", [])
+        results = data.get("results", [])
+        for item in results:
+            if not item.get("submitted_by"):
+                item["submitted_by"] = DEFAULT_SUBMITTER
+            else:
+                item["submitted_by"] = item["submitted_by"].strip().rstrip("/").split("/")[-1]
+        return results
     return []
 
 
@@ -77,6 +83,7 @@ def main() -> None:
             item["submitted_by"] = DEFAULT_SUBMITTER
 
     submitter = (args.submitted_by or DEFAULT_SUBMITTER).strip() or DEFAULT_SUBMITTER
+    submitter = submitter.lstrip("@").split("/")[-1]
     for item in entries:
         if extract_video_id(item.get("link", "")) == new_id:
             sys.exit(f"Видео с ID {new_id} уже есть в list.json.")

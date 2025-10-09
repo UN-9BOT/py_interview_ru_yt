@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 
 DATA_PATH = Path("list.json")
 OUTPUT_PATH = Path("README.md")
-DEFAULT_SUBMITTER = "https://github.com/UN-9BOT/"
+DEFAULT_SUBMITTER = "UN-9BOT"
 
 
 @dataclass
@@ -45,12 +45,16 @@ def load_entries() -> list[Entry]:
         title = sanitize_title(raw_title.strip())
         channel = item.get("channel_name", "").strip()
         link = item.get("link", "").strip()
-        submitted_by = item.get("submitted_by", "").strip() or DEFAULT_SUBMITTER
+        raw_submitter = item.get("submitted_by", "").strip()
+        if raw_submitter:
+            submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@") or DEFAULT_SUBMITTER
+        else:
+            submitter = DEFAULT_SUBMITTER
         if not (title and channel and link):
             continue
         if link in seen_links:
             continue
-        entries.append(Entry(title=title, channel=channel, link=link, submitted_by=submitted_by))
+        entries.append(Entry(title=title, channel=channel, link=link, submitted_by=submitter))
         seen_links.add(link)
     return entries
 
@@ -92,21 +96,7 @@ def render_markdown(entries: list[Entry]) -> str:
         return "\n".join(header)
 
     grouped = group_by_channel(entries)
-    submitters = dict(
-        sorted(
-            ((entry.link, entry.submitted_by) for entry in entries),
-            key=lambda item: item[0],
-        )
-    )
-    submitters_json = json.dumps({"submitted_by": submitters}, ensure_ascii=False, indent=2)
-
     toc_block: list[str] = [
-        "## Добавившие",
-        "",
-        "```json",
-        *submitters_json.splitlines(),
-        "```",
-        "",
         "## Каналы",
         "",
     ]
@@ -137,11 +127,12 @@ def render_markdown(entries: list[Entry]) -> str:
     for channel, items in grouped.items():
         blocks.append(f"## {channel}")
         blocks.append("")
-        blocks.append("| # | Видео | Ссылка |")
-        blocks.append("| - | ----- | ------ |")
+        blocks.append("| # | Видео | Ссылка | Контрибьютор |")
+        blocks.append("| - | ----- | ------ | ------------- |")
         for idx, item in enumerate(items, start=1):
             label = link_label(item.link)
-            blocks.append(f"| {idx} | {item.title} | [{label}]({item.link}) |")
+            contributor_link = f"https://github.com/{item.submitted_by}"
+            blocks.append(f"| {idx} | {item.title} | [{label}]({item.link}) | [{item.submitted_by}]({contributor_link}) |")
         blocks.append("")
     return "\n".join(blocks)
 
