@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **81**
+- Всего интервью: **82**
 
 ## Contributing
 
@@ -35,6 +35,12 @@
 | 11 | Собеседование подписчика Trainee Python Developer | [hIepjGgrfPo](https://www.youtube.com/watch?v=hIepjGgrfPo) |
 | 12 | Собеседование подписчика Trainee Python Developer | [HvMXn0lATXo](https://www.youtube.com/watch?v=HvMXn0lATXo&t=554s) |
 | 13 | Собеседование подписчика Trainee Python Developer | [ZPWdmWLasGc](https://www.youtube.com/watch?v=ZPWdmWLasGc) |
+
+## boreesych
+
+| # | Видео | Ссылка |
+| - | ----- | ------ |
+| 1 | Публичное тестовое собеседование Георгия на роль Junior Python разработчика | [jseRiu6RTAM](https://www.youtube.com/watch?v=jseRiu6RTAM) |
 
 ## Habr
 
