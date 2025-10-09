@@ -3,6 +3,7 @@ import json
 import os
 import shlex
 import sys
+from datetime import datetime
 from typing import Dict, Optional
 
 def main() -> None:
@@ -14,6 +15,7 @@ def main() -> None:
     issue_number: Optional[int] = None
     payload = raw
     author = ""
+    created_at_raw = ""
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
@@ -22,6 +24,7 @@ def main() -> None:
         payload = data.get("payload", "")
         issue_number = data.get("number")
         author = (data.get("author") or "").strip()
+        created_at_raw = (data.get("created_at") or "").strip()
 
     payload = payload.strip()
     if payload.startswith("/add-video"):
@@ -59,6 +62,16 @@ def main() -> None:
             print("Переданный логин автора пустой после нормализации.", file=sys.stderr)
             sys.exit(1)
         fh.write(f"SUBMITTER={submitter}\n")
+
+        if not created_at_raw:
+            print("Не удалось определить дату создания issue.", file=sys.stderr)
+            sys.exit(1)
+        try:
+            created_dt = datetime.fromisoformat(created_at_raw.replace("Z", "+00:00"))
+        except ValueError:
+            print(f"Некорректная дата создания issue: {created_at_raw}", file=sys.stderr)
+            sys.exit(1)
+        fh.write(f"ADDED_AT={created_dt.date().isoformat()}\n")
 
 
 if __name__ == "__main__":

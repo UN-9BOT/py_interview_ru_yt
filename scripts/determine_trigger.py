@@ -41,7 +41,12 @@ def main() -> None:
             issue_number = issue.get("number")
             author_login = (issue.get("user") or {}).get("login") or ""
             command_json = json.dumps(
-                {"number": issue_number, "payload": body, "author": author_login},
+                {
+                    "number": issue_number,
+                    "payload": body,
+                    "author": author_login,
+                    "created_at": issue.get("created_at"),
+                },
                 ensure_ascii=False,
             )
             write_output(True, True, command_json)
@@ -69,7 +74,12 @@ def main() -> None:
         issue_number = issue.get("number")
         author_login = author or issue_author or ""
         command_json = json.dumps(
-            {"number": issue_number, "payload": body, "author": author_login},
+            {
+                "number": issue_number,
+                "payload": body,
+                "author": author_login,
+                "created_at": issue.get("created_at"),
+            },
             ensure_ascii=False,
         )
         write_output(True, True, command_json)

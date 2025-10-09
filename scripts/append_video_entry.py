@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -17,6 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--title", required=True, help="Название видео")
     parser.add_argument("--channel", required=True, help="Название канала")
     parser.add_argument("--submitted-by", dest="submitted_by", help="Логин добавившего пользователя (GitHub)")
+    parser.add_argument("--added-at", dest="added_at", help="Дата добавления (YYYY-MM-DD)")
     return parser.parse_args()
 
 
@@ -60,7 +62,17 @@ def load_entries() -> list[dict]:
                 f"У записи #{idx} ({item.get('title', '<без названия>')}) отсутствует поле submitted_by. "
                 "Добавьте логин контрибьютора в list.json."
             )
-        item["submitted_by"] = normalize_submitter(raw_submitter)
+        added_at = (item.get("added_at") or "").strip()
+        if not added_at:
+            sys.exit(
+                f"У записи #{idx} ({item.get('title', '<без названия>')}) отсутствует поле added_at."
+            )
+        try:
+            datetime.strptime(added_at, "%Y-%m-%d")
+        except ValueError:
+            sys.exit(
+                f"У записи #{idx} ({item.get('title', '<без названия>')}) некорректная дата added_at: {added_at}."
+            )
     return results
 
 
@@ -78,17 +90,28 @@ def main() -> None:
     title = args.title.strip()
     channel = args.channel.strip()
     submitted_raw = (args.submitted_by or "").strip()
+    added_at_raw = (args.added_at or "").strip()
 
     if not link or not title or not channel:
         sys.exit("Все поля (link, title, channel) обязательны.")
     if not submitted_raw:
         sys.exit("Параметр --submitted-by обязателен.")
+    if not added_at_raw:
+        sys.exit("Параметр --added-at обязателен.")
 
     ensure_youtube(link)
     new_id = extract_video_id(link)
 
     entries = load_entries()
-    submitter = normalize_submitter(submitted_raw)
+    submitter_login = normalize_submitter(submitted_raw)
+    if not submitter_login:
+        sys.exit("Некорректное значение --submitted-by.")
+    submitter_url = f"https://github.com/{submitter_login}/"
+    try:
+        datetime.strptime(added_at_raw, "%Y-%m-%d")
+    except ValueError:
+        sys.exit("Параметр --added-at должен быть в формате YYYY-MM-DD.")
+
     for item in entries:
         if extract_video_id(item.get("link", "")) == new_id:
             sys.exit(f"Видео с ID {new_id} уже есть в list.json.")
@@ -98,7 +121,8 @@ def main() -> None:
             "title": title,
             "channel_name": channel,
             "link": link,
-            "submitted_by": submitter,
+            "submitted_by": submitter_url,
+            "added_at": added_at_raw,
         }
     )
     save_entries(entries)

@@ -1,7 +1,7 @@
 # Подборка Python-собеседований
 
 - Всего интервью: **86**
-- Последнее обновление: **2025-10-09**
+- Последнее добавление: **2025-10-09**
 
 ## Contributing
 
@@ -23,11 +23,11 @@
 
 | # | Канал | Видео | Ссылка | Контрибьютор |
 | - | ------ | ----- | ------ | ------------- |
-| 1 | Артём Шумейко | Реальное ЛАЙВКОДИНГ собеседование JUNIOR Python разработчик | [soVEbzAnKx8](https://www.youtube.com/watch?v=soVEbzAnKx8) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 2 | MoscowPython | Моковое собеседование на Senior Python-разработчика — Solvery & Moscow Python | [YJiQ-TBb9po](https://www.youtube.com/watch?v=YJiQ-TBb9po) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 3 | Python собеседования | Собеседование на позицию Senior Python Developer 5000$ #12 | [7JCf77NZRm0](https://www.youtube.com/watch?v=7JCf77NZRm0) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 4 | Python Mentor | 🚨 Пытаюсь пройти РЕАЛЬНЫЙ собес на Lead Python Engineer / Теория + рефакторинг кода / Опять фиаско? | [LjA10h-tfkQ](https://www.youtube.com/watch?v=LjA10h-tfkQ) | [UN-9BOT](https://github.com/UN-9BOT) |
-| 5 | boreesych | Публичное тестовое собеседование Георгия на роль Junior Python разработчика | [jseRiu6RTAM](https://www.youtube.com/watch?v=jseRiu6RTAM) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 1 | ШОРТКАТ — менторская программа | Пример успешного собеседование на Python Middle разработчика — WebSockets, Docker | [K59vNnxCre4](https://www.youtube.com/watch?v=K59vNnxCre4) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 2 | Хекслет - школа программирования | Собеседование python-разработчика для Авито | [REN0G58nJAs](https://www.youtube.com/watch?v=REN0G58nJAs) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 3 | Хекслет - школа программирования | Публичное собеседование: Python-программист [Хекслет] | [I-KhxNwc1Ns](https://www.youtube.com/watch?v=I-KhxNwc1Ns) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 4 | Хекслет - школа программирования | Публичное собеседование: Junior Python-программист | [MgFH0IkQNMQ](https://www.youtube.com/watch?v=MgFH0IkQNMQ) | [UN-9BOT](https://github.com/UN-9BOT) |
+| 5 | Хекслет - школа программирования | 15 теоретических вопросов для начинающего Python-программиста на собеседовании (и 1 задача) | [B5Xbyj4h1JI](https://www.youtube.com/watch?v=B5Xbyj4h1JI) | [UN-9BOT](https://github.com/UN-9BOT) |
 
 ## Каналы
 

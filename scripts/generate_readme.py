@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -18,6 +18,7 @@ class Entry:
     channel: str
     link: str
     submitted_by: str
+    added_at: date
 
 
 def sanitize_title(value: str) -> str:
@@ -50,11 +51,26 @@ def load_entries() -> list[Entry]:
         submitter = raw_submitter.rstrip("/").split("/")[-1].lstrip("@")
         if not submitter:
             raise ValueError(f"Для ссылки {link} указано пустое submitted_by в list.json.")
+        raw_added_at = (item.get("added_at") or "").strip()
+        if not raw_added_at:
+            raise ValueError(f"Для ссылки {link} не указана дата added_at.")
+        try:
+            added_at = datetime.fromisoformat(raw_added_at).date()
+        except ValueError as exc:
+            raise ValueError(f"Некорректная дата added_at для {link}: {raw_added_at}") from exc
         if not (title and channel and link):
             continue
         if link in seen_links:
             continue
-        entries.append(Entry(title=title, channel=channel, link=link, submitted_by=submitter))
+        entries.append(
+            Entry(
+                title=title,
+                channel=channel,
+                link=link,
+                submitted_by=submitter,
+                added_at=added_at,
+            )
+        )
         seen_links.add(link)
     return entries
 
@@ -83,11 +99,12 @@ def anchor_id(name: str) -> str:
 
 def render_markdown(entries: list[Entry]) -> str:
     total = len(entries)
+    latest_added = max((entry.added_at for entry in entries), default=None)
     header = [
         "# Подборка Python-собеседований",
         "",
         f"- Всего интервью: **{total}**",
-        f"- Последнее обновление: **{date.today().isoformat()}**",
+        f"- Последнее добавление: **{(latest_added or date.today()).isoformat()}**",
         "",
     ]
     if total == 0:
@@ -105,7 +122,10 @@ def render_markdown(entries: list[Entry]) -> str:
     toc_block.append("")
 
     latest_section: list[str] = []
-    latest = entries[-5:]
+    latest = sorted(
+        entries,
+        key=lambda item: (item.added_at, item.channel.lower(), item.title.lower(), item.link),
+    )[-5:]
     if latest:
         latest_section.extend(
             [

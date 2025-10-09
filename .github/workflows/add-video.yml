@@ -37,12 +37,14 @@ jobs:
           TITLE: ${{ steps.parse.outputs.TITLE }}
           CHANNEL: ${{ steps.parse.outputs.CHANNEL }}
           SUBMITTER: ${{ steps.parse.outputs.SUBMITTER }}
+          ADDED_AT: ${{ steps.parse.outputs.ADDED_AT }}
         run: |
           python scripts/append_video_entry.py \
             --link "$LINK" \
             --title "$TITLE" \
             --channel "$CHANNEL" \
-            --submitted-by "$SUBMITTER"
+            --submitted-by "$SUBMITTER" \
+            --added-at "$ADDED_AT"
 
       - name: Generate README
         if: steps.guard.outputs.should_run == 'true'
