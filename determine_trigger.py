@@ -34,10 +34,6 @@ def main() -> None:
     with open(event_path, encoding="utf-8") as fh:
         event: dict[str, Any] = json.load(fh)
 
-    if event_name == "workflow_dispatch":
-        write_output(True, False)
-        return
-
     if event_name == "issues":
         issue = event.get("issue", {}) or {}
         body = issue.get("body") or ""

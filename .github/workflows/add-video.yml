@@ -1,17 +1,6 @@
 name: Add Video via Dispatch
 
 on:
-  workflow_dispatch:
-    inputs:
-      link:
-        description: "YouTube ссылка (https://www.youtube.com/... или https://youtu.be/...)"
-        required: true
-      title:
-        description: "Название видео"
-        required: true
-      channel:
-        description: "Название канала"
-        required: true
   issues:
     types: [opened]
   issue_comment:
@@ -44,9 +33,9 @@ jobs:
       - name: Append video entry
         if: steps.guard.outputs.should_run == 'true'
         env:
-          LINK: ${{ steps.parse.outputs.LINK || inputs.link }}
-          TITLE: ${{ steps.parse.outputs.TITLE || inputs.title }}
-          CHANNEL: ${{ steps.parse.outputs.CHANNEL || inputs.channel }}
+          LINK: ${{ steps.parse.outputs.LINK }}
+          TITLE: ${{ steps.parse.outputs.TITLE }}
+          CHANNEL: ${{ steps.parse.outputs.CHANNEL }}
         run: |
           python append_video_entry.py \
             --link "$LINK" \
@@ -61,14 +50,14 @@ jobs:
         if: steps.guard.outputs.should_run == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: "Add video: ${{ steps.parse.outputs.TITLE || inputs.title }}"
+          commit-message: "Add video: ${{ steps.parse.outputs.TITLE }}"
           branch: "bot/add-video-${{ github.run_id }}"
-          title: "Add video: ${{ steps.parse.outputs.TITLE || inputs.title }}"
+          title: "Add video: ${{ steps.parse.outputs.TITLE }}"
           body: |
             Добавлено новое видео:
-            - Канал: `${{ steps.parse.outputs.CHANNEL || inputs.channel }}`
-            - Название: `${{ steps.parse.outputs.TITLE || inputs.title }}`
-            - Ссылка: `${{ steps.parse.outputs.LINK || inputs.link }}`
+            - Канал: `${{ steps.parse.outputs.CHANNEL }}`
+            - Название: `${{ steps.parse.outputs.TITLE }}`
+            - Ссылка: `${{ steps.parse.outputs.LINK }}`
           add-paths: |
             list.json
             README.md

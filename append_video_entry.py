@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -54,6 +55,9 @@ def save_entries(entries: list[dict]) -> None:
 
 
 def main() -> None:
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        sys.exit("Добавление возможно только через GitHub Actions по issue /add-video.")
+
     args = parse_args()
     link = args.link.strip()
     title = args.title.strip()

@@ -69,7 +69,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "",
     ]
     if total == 0:
-        header.append("Данные отсутствуют. Добавьте интервью через `make add` или GitHub Actions workflow.")
+        header.append("Данные отсутствуют. Добавьте интервью через issue с командой /add-video.")
         header.append("")
         return "\n".join(header)
 
@@ -87,8 +87,7 @@ def render_markdown(entries: list[Entry]) -> str:
         "  title=\"Название видео\"",
         "  channel=\"Название канала\"",
         "  ```",
-        "  GitHub Actions создаст PR автоматически.",
-        "- При желании можно запустить workflow `Add Video via Dispatch` и заполнить поля вручную.",
+        "  GitHub Actions создаст PR автоматически. Других способов добавления нет.",
         "",
     ]
     for channel, items in grouped.items():

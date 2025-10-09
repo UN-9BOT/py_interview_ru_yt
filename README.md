@@ -13,8 +13,7 @@
   title="Название видео"
   channel="Название канала"
   ```
-  GitHub Actions создаст PR автоматически.
-- При желании можно запустить workflow `Add Video via Dispatch` и заполнить поля вручную.
+  GitHub Actions создаст PR автоматически. Других способов добавления нет.
 
 ## Artem Levkivskyi
 
@@ -190,4 +189,3 @@
 | # | Видео | Ссылка |
 | - | ----- | ------ |
 | 1 | Пример успешного собеседование на Python Middle разработчика — WebSockets, Docker | [K59vNnxCre4](https://www.youtube.com/watch?v=K59vNnxCre4) |
-
