@@ -1,6 +1,6 @@
 # Подборка Python-собеседований
 
-- Всего интервью: **84**
+- Всего интервью: **85**
 
 ## Contributing
 
@@ -73,8 +73,9 @@
 | # | Видео | Ссылка |
 | - | ----- | ------ |
 | 1 | Tech Interview Fest — Моковое собеседование для Python Junior — Moscow Python + Solvery | [SqHpayljeTc](https://www.youtube.com/watch?v=SqHpayljeTc) |
-| 2 | Техническое собеседование Junior Python — Решаем практические задачи в прямом эфире | [oZ76c0aWBIo](https://www.youtube.com/watch?v=oZ76c0aWBIo&t=1s) |
-| 3 | Техническое собеседование на позицию Python Junior — Solvery + Moscow Python | [TeE0j4RN6fQ](https://www.youtube.com/watch?v=TeE0j4RN6fQ) |
+| 2 | Моковое собеседование на Senior Python-разработчика — Solvery & Moscow Python | [YJiQ-TBb9po](https://www.youtube.com/watch?v=YJiQ-TBb9po) |
+| 3 | Техническое собеседование Junior Python — Решаем практические задачи в прямом эфире | [oZ76c0aWBIo](https://www.youtube.com/watch?v=oZ76c0aWBIo&t=1s) |
+| 4 | Техническое собеседование на позицию Python Junior — Solvery + Moscow Python | [TeE0j4RN6fQ](https://www.youtube.com/watch?v=TeE0j4RN6fQ) |
 
 ## Python Mentor
 
