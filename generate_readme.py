@@ -7,7 +7,7 @@ from collections.abc import Iterable
 from urllib.parse import parse_qs, urlparse
 
 
-INPUT_PATH = Path("list.json")
+DATA_PATH = Path("list.json")
 OUTPUT_PATH = Path("README.md")
 
 
@@ -31,18 +31,23 @@ def link_label(url: str) -> str:
     return tail or parsed.netloc
 
 
-def load_entries(path: Path) -> list[Entry]:
-    if not path.exists():
-        return []
-    data = json.loads(path.read_text(encoding="utf-8"))
-    entries = []
+def load_entries() -> list[Entry]:
+    entries: list[Entry] = []
+    seen_links: set[str] = set()
+    if not DATA_PATH.exists():
+        return entries
+    data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     for item in data.get("results", []):
         raw_title = item.get("title", "")
         title = sanitize_title(raw_title.strip())
         channel = item.get("channel_name", "").strip()
         link = item.get("link", "").strip()
-        if title and channel and link:
-            entries.append(Entry(title=title, channel=channel, link=link))
+        if not (title and channel and link):
+            continue
+        if link in seen_links:
+            continue
+        entries.append(Entry(title=title, channel=channel, link=link))
+        seen_links.add(link)
     return entries
 
 
@@ -75,8 +80,9 @@ def render_markdown(entries: list[Entry]) -> str:
         "",
         "- Открыт для PR =)",
         "- README.md руками не править!",
-        "- Добавляйте новые интервью через `make readme` или руками в конец `list.json` (ключ `results`).",
-        "- Используйте только YT-ссылки и видео по Python.",
+        "- Добавляйте новые интервью через `make meta \"https://youtu...\"` или интерактивно через `make add`.",
+        "- При ручных правках дописывайте записи в конец `list.json` (ключ `results`).",
+        "- Используйте только YouTube-ссылки и интервью по Python.",
         "- После правок выполните `make readme`, чтобы обновить `README.md`.",
         "",
     ]
@@ -93,7 +99,7 @@ def render_markdown(entries: list[Entry]) -> str:
 
 
 def main() -> None:
-    entries = load_entries(INPUT_PATH)
+    entries = load_entries()
     markdown = render_markdown(entries)
     OUTPUT_PATH.write_text(markdown + "\n", encoding="utf-8")
 

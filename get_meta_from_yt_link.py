@@ -1,8 +1,9 @@
+#!/usr/bin/env python3
+import argparse
 import json
 import logging
-import random
+import subprocess
 import sys
-import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,16 +21,44 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-TEST1_PATH = Path("test1.json")
-LIST_PATH = Path("list.json")
+DATA_PATH = Path("list.json")
 WAIT_TIMEOUT = 20
-SLEEP_RANGE = (5, 15)
 
 
 @dataclass
 class VideoInfo:
     title: str
     channel: str
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Получить метаданные YouTube-видео и сохранить в list.json",
+    )
+    parser.add_argument("link", help="Ссылка на YouTube-видео")
+    return parser.parse_args()
+
+
+def is_youtube_link(link: str) -> bool:
+    lowered = link.lower()
+    return "youtube.com" in lowered or "youtu.be" in lowered
+
+
+def load_results() -> list[dict]:
+    if not DATA_PATH.exists():
+        logger.info("%s не найден. Создаю новый список.", DATA_PATH)
+        return []
+    try:
+        data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        logger.error("Не удалось распарсить %s: %s", DATA_PATH, exc)
+        sys.exit(1)
+    return data.get("results", [])
+
+
+def save_results(results: list[dict]) -> None:
+    payload = {"results": results}
+    DATA_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def _build_driver() -> webdriver.Chrome:
@@ -47,113 +76,76 @@ def _build_driver() -> webdriver.Chrome:
 def _locate_channel(wait: WebDriverWait) -> str:
     selectors = ("#owner-name a", "#channel-name a")
     for selector in selectors:
-        logger.info("Пробуем найти канал через selector=%s", selector)
         try:
             elem = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
             text = elem.get_attribute("textContent") or elem.text
             text = (text or "").strip()
             if text:
-                logger.info("Канал найден: %s", text)
                 return text
         except TimeoutException:
-            logger.warning("Не найден канал по selector=%s", selector)
+            logger.debug("Selector %s не найден", selector)
             continue
-    logger.error("Не удалось получить название канала")
     return "неизвестный канал"
 
 
 def fetch_video_info(driver: webdriver.Chrome, url: str) -> VideoInfo:
     logger.info("Открываем страницу %s", url)
     driver.get(url)
-    logger.info("Получили текущий URL: %s", driver.current_url)
-    logger.info("Document.readyState: %s", driver.execute_script("return document.readyState"))
     wait = WebDriverWait(driver, WAIT_TIMEOUT)
     title = driver.title.removesuffix(" - YouTube").strip()
-    logger.info("Заголовок из driver.title: %s", title)
     if not title:
-        logger.info("driver.title пустой, ищем <h1>")
         elem = wait.until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "h1.ytd-watch-metadata"))
         )
         title = elem.text.strip() or "неизвестное видео"
     channel = _locate_channel(wait)
     if not title:
-        logger.error("Не удалось извлечь название видео")
         title = "неизвестное видео"
     return VideoInfo(title=title, channel=channel)
 
 
-def _load_links(path: Path) -> list[str]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    interviews = raw.get("interviews", {})
-    links = []
-    for level, entries in interviews.items():
-        logger.info("Скачиваем раздел %s (%d записей)", level, len(entries))
-        for entry in entries:
-            link = entry.get("link")
-            if link:
-                links.append(link)
-    return links
-
-
-def _load_existing_results(path: Path) -> list[dict]:
-    if path.exists():
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-            return data.get("results", [])
-        except json.JSONDecodeError:
-            logger.warning("Не удалось распарсить %s, начинаем заново", path)
-    return []
-
-
-def _store_results(path: Path, results: list[dict]) -> None:
-    payload = {"results": results}
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+def update_readme() -> None:
+    logger.info("Перегенерирую README.md")
+    subprocess.run([sys.executable, "generate_readme.py"], check=True)
 
 
 def main() -> None:
-    if not TEST1_PATH.exists():
-        logger.error("Не найден входной файл %s", TEST1_PATH)
+    args = parse_args()
+    link = args.link.strip()
+
+    if not is_youtube_link(link):
+        logger.error("Нужна ссылка на YouTube. Получено: %s", link)
         sys.exit(1)
 
-    links = _load_links(TEST1_PATH)
-    if not links:
-        logger.error("Не найдено ссылок в %s", TEST1_PATH)
-        sys.exit(1)
-
-    results = _load_existing_results(LIST_PATH)
-    processed = {item["link"] for item in results if "link" in item}
-    logger.info("Уже обработано: %d ссылок", len(processed))
+    results = load_results()
+    if any(item.get("link") == link for item in results):
+        logger.info("Эта ссылка уже есть в списке. Повторений не требуется.")
+        sys.exit(0)
 
     try:
         driver = _build_driver()
     except WebDriverException as exc:
-        logger.error("Не удалось инициализировать WebDriver: %s", exc)
+        logger.error("Не удалось запустить ChromeDriver: %s", exc)
         sys.exit(1)
 
     try:
-        for idx, url in enumerate(links, start=1):
-            if url in processed:
-                logger.info("Пропускаем уже обработанную ссылку: %s", url)
-                continue
-
-            logger.info("Обработка %d/%d: %s", idx, len(links), url)
-            info = fetch_video_info(driver, url)
-            entry = {"title": info.title, "channel_name": info.channel, "link": url}
-            results.append(entry)
-            _store_results(LIST_PATH, results)
-            logger.info("Запись сохранена. Текущий размер: %d", len(results))
-
-            if idx != len(links):
-                delay = random.uniform(*SLEEP_RANGE)
-                logger.info("Пауза %.2f секунд", delay)
-                time.sleep(delay)
+        info = fetch_video_info(driver, link)
     except (WebDriverException, TimeoutException) as exc:
-        logger.error("Ошибка Selenium: %s", exc)
+        logger.error("Ошибка во время работы Selenium: %s", exc)
         sys.exit(1)
     finally:
-        logger.info("Закрываем браузер")
         driver.quit()
+
+    entry = {"title": info.title, "channel_name": info.channel, "link": link}
+    results.append(entry)
+    save_results(results)
+    logger.info("Добавлено: %s — %s", info.channel, info.title)
+
+    try:
+        update_readme()
+    except subprocess.CalledProcessError as exc:
+        logger.error("Не удалось обновить README: %s", exc)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
