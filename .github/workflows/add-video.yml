@@ -24,56 +24,9 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Check trigger context
+      - name: Determine trigger context
         id: guard
-        run: |
-          echo "should_run=false" >> "$GITHUB_OUTPUT"
-          echo "issue_mode=false" >> "$GITHUB_OUTPUT"
-          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "${GITHUB_EVENT_NAME}" == "issues" ]]; then
-            body="${{ github.event.issue.body }}"
-            prefix="/add-video"
-            first_line="$(printf '%s' "$body" | head -n1 | tr -d '\r' | xargs)"
-            if [[ "${first_line}" != "${prefix}" ]]; then
-              echo "Issue body without /add-video prefix; skipping."
-              exit 0
-            fi
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-            echo "issue_mode=true" >> "$GITHUB_OUTPUT"
-            echo "raw_command=${body}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if [[ "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
-            if [[ "${{ github.event.issue.pull_request }}" != "" ]]; then
-              echo "PR comment detected; skipping."
-              exit 0
-            fi
-            comment_body="${{ github.event.comment.body }}"
-            prefix="/add-video"
-            first_line="$(printf '%s' "$comment_body" | head -n1 | tr -d '\r' | xargs)"
-            if [[ "${first_line}" != "${prefix}" ]]; then
-              echo "Comment without /add-video prefix; skipping."
-              exit 0
-            fi
-            author="${{ github.event.comment.user.login }}"
-            issue_author="${{ github.event.issue.user.login }}"
-            if [[ "${author}" != "${issue_author}" ]]; then
-              echo "Only issue author may submit the command; skipping."
-              exit 0
-            fi
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
-            echo "issue_mode=true" >> "$GITHUB_OUTPUT"
-            echo "raw_command=${comment_body}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "Unsupported trigger ${GITHUB_EVENT_NAME}; skipping."
-          exit 0
+        run: python determine_trigger.py
 
       - name: Parse issue command
         if: steps.guard.outputs.issue_mode == 'true'
